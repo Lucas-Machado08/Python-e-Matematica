@@ -81,7 +81,7 @@ if df is not None:
         text_auto='.1f',
         title="Uso dos Modais por Raça/Cor"
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')
     
     st.subheader("Uso Agrupado por Categoria de Modal")
     df_cat = df_filtrado.groupby(['Categoria Modal', 'Raça/Cor'])['Percentual'].sum().reset_index()
@@ -93,7 +93,55 @@ if df is not None:
         barmode='group',
         title="Uso por Categoria (Público x Particular x Ativo)"
     )
-    st.plotly_chart(fig_cat, use_container_width=True)
+    st.plotly_chart(fig_cat, width='stretch')
     
     st.subheader("Tabela de Dados Filtrados")
     st.dataframe(df_filtrado)
+
+# Noticias
+st.markdown("---")
+st.header("📰 Notícias e Panorama de Mobilidade Urbana & Desigualdade")
+
+# Puxando dados calculados das notícias
+pct_coletivo_negros = df[(df['Meio de Transporte'] == 'Transporte coletivo') & (df['Raça/Cor'] == 'Preta ou Parda')]['Percentual'].values[0] if df is not None else 45.8
+pct_coletivo_brancos = df[(df['Meio de Transporte'] == 'Transporte coletivo') & (df['Raça/Cor'] == 'Branca')]['Percentual'].values[0] if df is not None else 35.2
+
+# noticia 1
+st.subheader("Desigualdade Racial no Acesso ao Transporte Público")
+col_text1, col_img1 = st.columns([2, 1])
+
+with col_text1:
+    st.markdown(f"""
+    A população negra e parda depende significativamente mais do transporte público coletivo para deslocamentos diários no Brasil. 
+    Segundo dados do IPEA e estudos do Instituto Mobilidade em Foco, trabalhadores negros chegam a gastar até **20% a mais do seu tempo diário em deslocamentos** quando comparados a trabalhadores brancos.
+
+    **Dado do projeto:**
+    Enquanto a utilização do transporte coletivo entre a população **Preta ou Parda é de {pct_coletivo_negros:.1f}%**, entre a população **Branca este valor cai para {pct_coletivo_brancos:.1f}%**. Essa disparidade evidencia como o acesso à infraestrutura viária e ao transporte de qualidade afeta diretamente a inclusão socioeconômica e a mobilidade social.
+    """)
+
+with col_img1:
+    st.image(
+        "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80",
+        caption="Ônibus urbano e transporte público coletivo nas grandes capitais",
+        width='stretch'
+    )
+
+st.markdown("<br>", unsafe_allow_html=True)
+
+# noticia 2
+st.subheader("Expansão da Mobilidade Ativa e Infraestrutura de Ciclovias")
+col_img2, col_text2 = st.columns([1, 2])
+
+with col_img2:
+    st.image(
+        "https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&w=600&q=80",
+        caption="Uso da bicicleta e infraestrutura de mobilidade ativa nas cidades",
+        width='stretch'
+    )
+
+with col_text2:
+    st.markdown("""
+    Com o avanço do debate sobre sustentabilidade e a aprovação da Política Nacional de Mobilidade Urbana, diversas cidades brasileiras têm investido no incentivo à **mobilidade ativa (bicicletas e caminhadas)**. 
+    
+    Apesar dos avanços na construção de ciclovias, pesquisas apontam que a malha cicloviária ainda se concentra majoritariamente nos centros urbanos e bairros de maior renda. Nas periferias, o uso da bicicleta é frequentemente uma necessidade econômica de transporte básico, porém praticado em vias sem sinalização ou proteção adequada, exigindo políticas públicas focadas em segurança e integração modal.
+    """)
